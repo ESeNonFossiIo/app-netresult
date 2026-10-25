@@ -1,0 +1,31 @@
+NET RESULT — STORE LISTING DESCRIPTIONS
+========================================
+
+SHORT DESCRIPTION (79/80 chars)
+--------------------------------
+Track your tennis matches: log scores, filter by opponent, watch your win rate.
+
+
+FULL DESCRIPTION
+----------------
+Net Result is a simple, fast tennis match tracker. Log every match you play, set by set, and watch your win rate grow over time — no account, no ads, no internet connection required.
+
+LOG MATCHES IN SECONDS
+Record the date, your opponent, the score of each set, and optional notes. The win or loss is worked out automatically from the set scores you enter — you never have to tag the result yourself.
+
+KNOW YOUR NUMBERS
+The home screen greets you with your overall win rate and total matches played. Dive into the history screen for the full picture: browse every match you've logged, filter by opponent to see how a specific rivalry is going, and watch the summary stats update to match your filter.
+
+EDIT ANYTIME
+Made a typo? Every match can be edited or deleted straight from the history list — scores, opponent, date, and notes.
+
+YOUR DATA STAYS YOURS
+All matches are stored locally on your device in a private database. Export your full history to CSV or JSON at any time, and import it back on a new phone. A reset option lets you start fresh whenever you want.
+
+SPEAKS YOUR LANGUAGE
+Available in English, Italian, Spanish, Portuguese, and Greek.
+
+FREE AND OPEN SOURCE
+Net Result is open source under the MIT license. No tracking, no ads, no sign-up — just you, your matches, and your net result.
+
+Whether you play league matches every weekend or the occasional friendly, Net Result gives you a clear record of how your game is trending. Log it, filter it, and settle once and for all who really wins more often.
