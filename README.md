@@ -7,7 +7,7 @@
 <p align="center"><b>Your tennis matches, set by set. Know your numbers.</b></p>
 
 <p align="center">
-  <a href="https://github.com/ESeNonFossiIo/NetResult/releases/latest"><b>Download the latest version</b></a>
+  <a href="https://github.com/ESeNonFossiIo/app-netresult/releases/latest"><b>Download the latest version</b></a>
 </p>
 
 <p align="center">
@@ -24,7 +24,7 @@ connection needed.
 
 You need Android 7.0 or newer. The app isn't on the Play Store, so you install it from a file.
 
-1. Open the [latest release](https://github.com/ESeNonFossiIo/NetResult/releases/latest) on your phone and
+1. Open the [latest release](https://github.com/ESeNonFossiIo/app-netresult/releases/latest) on your phone and
    download `netresult-<version>-release.apk`.
 2. Open the downloaded file and install it. Android will ask you to allow installing apps from your browser
    or file manager ("install unknown apps"). Allow it for that app.
@@ -86,7 +86,7 @@ app never asks for access to your files: backups use Android's own file picker.
 ## Questions or ideas?
 
 Found a bug or have a suggestion? Please
-[open an issue](https://github.com/ESeNonFossiIo/NetResult/issues).
+[open an issue](https://github.com/ESeNonFossiIo/app-netresult/issues).
 
 ## Developers
 
