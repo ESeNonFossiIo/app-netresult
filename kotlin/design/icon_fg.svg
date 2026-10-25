@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <g transform="translate(256 256) scale(0.88) translate(-256 -256)"><defs>
+    <clipPath id="ball"><circle cx="256" cy="256" r="170"/></clipPath>
+    <radialGradient id="fur" cx="38%" cy="32%" r="80%">
+      <stop offset="0" stop-color="#e9f56a"/>
+      <stop offset="0.6" stop-color="#cfe83a"/>
+      <stop offset="1" stop-color="#a9c81f"/>
+    </radialGradient>
+  </defs>
+  
+  
+  <circle cx="256" cy="256" r="170" fill="url(#fur)" stroke="#1d2b12" stroke-width="10"/>
+  <g clip-path="url(#ball)" fill="none" stroke-linecap="round">
+    <path d="M 96 120 C 210 170 210 342 96 392" stroke="#1d2b12" stroke-width="30"/>
+    <path d="M 416 120 C 302 170 302 342 416 392" stroke="#1d2b12" stroke-width="30"/>
+    <path d="M 96 120 C 210 170 210 342 96 392" stroke="#fff" stroke-width="20"/>
+    <path d="M 416 120 C 302 170 302 342 416 392" stroke="#fff" stroke-width="20"/>
+    <path d="M 150 140 C 200 110 260 100 320 112" stroke="#fff" stroke-width="12" opacity="0.35"/>
+  </g>
+  <g fill="#fff" opacity="0.5"><circle cx="190" cy="190" r="6"/><circle cx="330" cy="330" r="5"/><circle cx="215" cy="330" r="4"/></g>
+  <circle cx="256" cy="256" r="170" fill="none" stroke="#1d2b12" stroke-width="10"/>
+</g></svg>
