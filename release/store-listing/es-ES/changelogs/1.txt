@@ -1,0 +1,10 @@
+¡Bienvenido a Net Result, la primera versión!
+
+Lleva el registro de cada partido de tenis:
+• Registra fecha, adversario, marcador set a set y notas
+• Victoria / Derrota / Empate calculados según el marcador
+• Explora el historial o filtra por adversario
+• Estadísticas y % de victorias, total y por adversario
+• Exporta e importa en CSV o JSON (duplicados omitidos)
+• En inglés, italiano, portugués, español y griego
+• Sin conexión: tus datos se quedan en el dispositivo

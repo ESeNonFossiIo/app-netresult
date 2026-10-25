@@ -1,0 +1,10 @@
+Bem-vindo ao Net Result — a primeira versão!
+
+Guarde o registo de cada jogo de ténis:
+• Registe data, adversário, resultado set a set e notas
+• Vitória / Derrota / Empate calculados pelo resultado
+• Percorra o histórico ou filtre por adversário
+• Estatísticas e taxa de vitória, total e por adversário
+• Exporte e importe em CSV ou JSON (duplicados ignorados)
+• Em inglês, italiano, português, espanhol e grego
+• Offline — os seus dados ficam no dispositivo

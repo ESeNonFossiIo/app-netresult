@@ -1,0 +1,10 @@
+Benvenuto in Net Result — la prima versione!
+
+Tieni traccia di ogni partita di tennis:
+• Registra data, avversario, punteggio set per set e note
+• Vittoria / Sconfitta / Pareggio calcolati dal punteggio
+• Sfoglia la cronologia o filtra per avversario
+• Statistiche e % vittorie, totali e per avversario
+• Esporta e importa in CSV o JSON (duplicati ignorati)
+• In inglese, italiano, portoghese, spagnolo e greco
+• Offline — i tuoi dati restano sul dispositivo

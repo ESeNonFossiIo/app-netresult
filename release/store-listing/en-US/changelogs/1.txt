@@ -1,0 +1,10 @@
+Welcome to Net Result — our first release!
+
+Keep a record of every tennis match you play:
+• Log games with date, opponent, set-by-set score and notes
+• Win / Loss / Draw set automatically from the score
+• Browse your history or filter by opponent
+• Stats and win rate, overall and per opponent
+• Export and import as CSV or JSON (duplicates skipped)
+• In English, Italian, Portuguese, Spanish and Greek
+• Fully offline — your data stays on your device
