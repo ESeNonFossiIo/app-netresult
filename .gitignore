@@ -1,0 +1,25 @@
+# Local overrides
+env.mk
+release.mk
+
+# Release signing & upload credentials (never commit: private keys/secrets)
+extras/*.keystore
+extras/*.keystore.*
+extras/service-account.json
+
+# Android / Gradle (see also kotlin/.gitignore)
+.gradle/
+build/
+local.properties
+*.apk
+*.aab
+logcat*.txt
+
+# Assistant / editor working files
+.claude/
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
