@@ -14,8 +14,8 @@ android {
         minSdk = 24
         targetSdk = 36
         // Kivy build shipped versionCode 2 / 0.0.4; keep strictly increasing.
-        versionCode = 3
-        versionName = "0.1.0"
+        versionCode = 4
+        versionName = "0.2.0"
     }
 
     signingConfigs {
@@ -75,5 +75,10 @@ dependencies {
     implementation("androidx.room:room-ktx:$room")
     ksp("androidx.room:room-compiler:$room")
 
+    implementation(project(":scoring"))
+    implementation("com.google.android.gms:play-services-wearable:18.2.0")
+    implementation("androidx.health.connect:connect-client:1.1.0-alpha10")
+
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.json:json:20240303")  // real org.json; the android.jar one is stubbed in unit tests
 }

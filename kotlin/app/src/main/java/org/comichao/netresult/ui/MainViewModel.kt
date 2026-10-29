@@ -27,12 +27,53 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     init {
+        LiveBus.load(app)
+        viewModelScope.launch { LiveLink.request(app) }   // is the watch already scoring a match?
         viewModelScope.launch {
             _palette.value = repo.getPref("palette", "ball")
             repo.migrateLegacyDb()
             val lang = repo.getPref("lang")
             if (lang.isNotEmpty()) applyLang(lang)
         }
+    }
+
+    // ---- Live match: one state shared with the watch (see LiveBus), so both always show the same score ---
+
+    val live: StateFlow<LiveState?> = LiveBus.state
+
+    private fun push(s: LiveState) {
+        LiveBus.set(getApplication(), s)
+        viewModelScope.launch { LiveLink.push(getApplication(), s) }
+    }
+
+    fun startLive(opponent: String, health: Boolean) {
+        val now = System.currentTimeMillis()
+        push(LiveState(rev = now, opponent = opponent.trim(), startedAt = now, health = health))
+    }
+    fun livePoint(me: Boolean) { live.value?.let { push(it.point(me)) } }
+    fun liveUndo() { live.value?.let { push(it.undo()) } }
+
+    fun liveDiscard() {
+        LiveBus.end(getApplication(), false)
+        viewModelScope.launch { LiveLink.end(getApplication(), false) }
+    }
+
+    /**
+     * Saves the match to the history and closes it on the watch too. If the watch is recording the workout it
+     * sends the session (with heart rate) itself, so only write to Health Connect here when it is not.
+     */
+    fun liveSave(onDone: () -> Unit) = viewModelScope.launch {
+        val l = live.value ?: return@launch
+        val sets = l.match.tokens()
+        if (sets.isNotEmpty()) repo.addGame(java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date()), l.opponent, sets, "")
+        if (l.health && !l.watch && android.os.Build.VERSION.SDK_INT >= 26) runCatching {
+            val ctx = getApplication<Application>()
+            if (org.comichao.netresult.health.HealthSync.granted(ctx))
+                org.comichao.netresult.health.HealthSync.writeSession(ctx, "Tennis vs ${l.opponent}", l.startedAt, System.currentTimeMillis())
+        }
+        LiveBus.end(getApplication(), true)
+        LiveLink.end(getApplication(), true)
+        onDone()
     }
 
     fun setLang(code: String) {

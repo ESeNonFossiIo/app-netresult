@@ -16,11 +16,12 @@ fun NetResultApp(vm: MainViewModel = viewModel()) {
     NavHost(nav, startDestination = "home") {
         composable("home") {
             HomeScreen(vm, onLog = { nav.navigate("log?draft=false") }, onResume = { nav.navigate("log?draft=true") },
-                onHistory = { nav.navigate("history") }, onSettings = { nav.navigate("settings") })
+                onLive = { nav.navigate("live") }, onHistory = { nav.navigate("history") }, onSettings = { nav.navigate("settings") })
         }
         composable("log?draft={draft}") { entry ->
             LogGameScreen(vm, resume = entry.arguments?.getString("draft") == "true", onBack = { nav.popBackStack() })
         }
+        composable("live") { LiveMatchScreen(vm, onBack = { nav.popBackStack() }) }
         composable("history") { HistoryScreen(vm, onBack = { nav.popBackStack() }) }
         composable("settings") { SettingsScreen(vm, onBack = { nav.popBackStack() }) }
     }

@@ -77,6 +77,7 @@ fun SettingsScreen(vm: MainViewModel, onBack: () -> Unit) {
                     }
                 }
             }
+            HealthAccessCard()
             SectionCard(stringResource(R.string.export_data)) {
                 Text(stringResource(R.string.export_save_msg), style = MaterialTheme.typography.bodySmall)
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {

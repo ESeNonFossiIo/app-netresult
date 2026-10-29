@@ -21,4 +21,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: netresult-debug
-          path: kotlin/app/build/outputs/apk/debug/*.apk
+          path: |
+            kotlin/app/build/outputs/apk/debug/*.apk
+            kotlin/wear/build/outputs/apk/debug/*.apk

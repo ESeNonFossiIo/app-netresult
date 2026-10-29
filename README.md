@@ -47,6 +47,10 @@ the file. After installing the new version use **Settings > Import data > CSV**.
   and add a note if you like. Win, draw or loss is worked out for you.
 - **Tie-breaks.** Played a match tie-break instead of a third set (e.g. 10-8)? Tap **TB** on that
   set. It still counts as a set won or lost.
+- **Score a match live.** Tap **Live match**, pick your opponent and tap who won each point. Tennis scoring
+  (deuce, advantage, tie-break at 6-6, best of three) is handled for you, the screen stays on, and **Undo** fixes
+  a mis-tap. The finished match is saved to your history, and optionally recorded in Health Connect as a tennis
+  session that Google Fit can show.
 - **See how you're doing.** The home screen shows matches won, drawn and lost, sets won and
   lost, your set win percentage and your overall win rate, plus your latest matches.
 - **Browse your history.** Filter by opponent to see how a rivalry is going, or group matches

@@ -1,10 +1,5 @@
 package org.comichao.netresult
 
-/** Trailing marker on a set token flagging a tie-break set (e.g. "10-8*"). */
-const val TIEBREAK_MARK = "*"
-
-data class SetScore(val player: Int, val opponent: Int, val tiebreak: Boolean = false)
-
 enum class Result { Win, Loss, Draw }
 
 /** Parse one set token such as "6-4" or "10-8*". Throws [IllegalArgumentException] if malformed. */
@@ -19,9 +14,6 @@ fun parseSet(token: String): SetScore {
     require(p != null && o != null) { "Malformed set score: '$token'. Expected 'p-o' e.g. '6-4'." }
     return SetScore(p, o, tb)
 }
-
-fun formatSet(player: Int, opponent: Int, tiebreak: Boolean = false): String =
-    "$player-$opponent" + if (tiebreak) TIEBREAK_MARK else ""
 
 fun computeResult(sets: List<String>): Result {
     var p = 0

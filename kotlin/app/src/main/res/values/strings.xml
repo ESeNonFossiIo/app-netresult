@@ -86,4 +86,22 @@
     <string name="palette_clay">Clay</string>
     <string name="palette_grass">Grass</string>
     <string name="palette_court">Hard court</string>
+    <string name="live_match">Live match</string>
+    <string name="live_vs">vs %1$s</string>
+    <string name="start_match">Start match</string>
+    <string name="you">You</string>
+    <string name="point_you">Point: me</string>
+    <string name="point_opponent">Point: %1$s</string>
+    <string name="tiebreak">Tie-break</string>
+    <string name="undo">Undo</string>
+    <string name="finish_match">Finish &amp; save</string>
+    <string name="finish_early_title">Finish the match now?</string>
+    <string name="finish_early_body">The score so far is saved to your history.</string>
+    <string name="record_health">Record in Health Connect</string>
+    <string name="record_health_hint">Adds a tennis session that Google Fit can show.</string>
+    <string name="health_connect">Health Connect</string>
+    <string name="health_allow">Allow Health Connect</string>
+    <string name="health_watch_hint">Lets Net Result record tennis sessions, with heart rate and calories from your watch, so Google Fit can show them.</string>
+    <string name="health_allowed">Health Connect access is on. Watch sessions are recorded.</string>
+    <string name="live_resume">Live match in progress</string>
 </resources>

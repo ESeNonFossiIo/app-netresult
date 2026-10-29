@@ -9,6 +9,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.*
@@ -27,10 +28,11 @@ import androidx.compose.ui.unit.sp
 import org.comichao.netresult.R
 
 @Composable
-fun HomeScreen(vm: MainViewModel, onLog: () -> Unit, onResume: () -> Unit, onHistory: () -> Unit, onSettings: () -> Unit) {
+fun HomeScreen(vm: MainViewModel, onLog: () -> Unit, onLive: () -> Unit, onResume: () -> Unit, onHistory: () -> Unit, onSettings: () -> Unit) {
     val s by vm.stats.collectAsState()
     val games by vm.games.collectAsState()
     val hasDraft by vm.hasDraft.collectAsState()
+    val live by vm.live.collectAsState()
     val pal = LocalPalette.current
     Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
         Column(
@@ -68,6 +70,12 @@ fun HomeScreen(vm: MainViewModel, onLog: () -> Unit, onResume: () -> Unit, onHis
                 colors = ButtonDefaults.buttonColors(containerColor = pal.accent, contentColor = pal.onAccent)) {
                 Icon(Icons.Default.Add, null); Spacer(Modifier.width(8.dp))
                 Text(stringResource(R.string.log_game_btn).removePrefix("+ "), fontSize = 19.sp, fontWeight = FontWeight.ExtraBold)
+            }
+            FilledTonalButton(onLive, Modifier.fillMaxWidth().height(54.dp), shape = MaterialTheme.shapes.medium,
+                colors = ButtonDefaults.filledTonalButtonColors(containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = .16f),
+                    contentColor = MaterialTheme.colorScheme.secondary)) {
+                Icon(Icons.Default.PlayArrow, null); Spacer(Modifier.width(8.dp))
+                Text(stringResource(if (live != null) R.string.live_resume else R.string.live_match), fontSize = 17.sp, fontWeight = FontWeight.Bold)
             }
             FilledTonalButton(onHistory, Modifier.fillMaxWidth().height(54.dp), shape = MaterialTheme.shapes.medium,
                 colors = ButtonDefaults.filledTonalButtonColors(containerColor = MaterialTheme.colorScheme.secondary.copy(alpha = .16f),

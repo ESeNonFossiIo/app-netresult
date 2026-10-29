@@ -2,6 +2,9 @@
 PKG      := org.comichao.netresult
 ACTIVITY := org.comichao.netresult.MainActivity
 
+# Phone app and its Wear OS companion are released together.
+MODULES := app wear
+
 include ../kotlin-devkit/common.mk
 
 ## test: Run the unit tests

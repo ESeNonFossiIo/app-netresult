@@ -13,3 +13,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "NetResult"
 include(":app")
+include(":scoring")
+include(":wear")

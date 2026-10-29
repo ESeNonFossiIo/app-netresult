@@ -85,4 +85,22 @@
     <string name="palette_clay">Tierra batida</string>
     <string name="palette_grass">Hierba</string>
     <string name="palette_court">Pista dura</string>
+    <string name="live_match">Partido en vivo</string>
+    <string name="live_vs">contra %1$s</string>
+    <string name="start_match">Empezar partido</string>
+    <string name="you">Tú</string>
+    <string name="point_you">Punto: yo</string>
+    <string name="point_opponent">Punto: %1$s</string>
+    <string name="tiebreak">Tie-break</string>
+    <string name="undo">Deshacer</string>
+    <string name="finish_match">Terminar y guardar</string>
+    <string name="finish_early_title">¿Terminar el partido ahora?</string>
+    <string name="finish_early_body">El marcador actual se guarda en tu historial.</string>
+    <string name="record_health">Registrar en Health Connect</string>
+    <string name="record_health_hint">Añade una sesión de tenis que Google Fit puede mostrar.</string>
+    <string name="health_connect">Health Connect</string>
+    <string name="health_allow">Permitir Health Connect</string>
+    <string name="health_watch_hint">Permite que Net Result registre sesiones de tenis, con frecuencia cardíaca y calorías del reloj, para verlas en Google Fit.</string>
+    <string name="health_allowed">Acceso a Health Connect activado. Las sesiones del reloj se registran.</string>
+    <string name="live_resume">Partido en curso</string>
 </resources>
