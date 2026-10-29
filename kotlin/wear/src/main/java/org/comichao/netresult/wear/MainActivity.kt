@@ -111,12 +111,14 @@ private fun MatchScreen(vm: WatchViewModel) {
             Button({ vm.point(false) }, Modifier.size(62.dp), colors = ButtonDefaults.secondaryButtonColors()) { Text("Opp", fontWeight = FontWeight.ExtraBold) }
         } else Text(if (m.setsMe > m.setsOpp) "You won" else "You lost", fontSize = 18.sp, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(4.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        if (confirmExit) Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            CompactChip(label = { Text("Discard") }, onClick = { vm.discard() }, colors = ChipDefaults.secondaryChipColors())
+            CompactChip(label = { Text("Keep") }, onClick = { confirmExit = false }, colors = ChipDefaults.primaryChipColors())
+        } else Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
             CompactChip(label = { Text("Undo") }, onClick = { vm.undo() }, enabled = vm.canUndo, colors = ChipDefaults.secondaryChipColors())
             CompactChip(label = { Text(if (vm.finishing) "Tap: save" else "Finish") }, onClick = { vm.finishMatch() },
                 enabled = m.tokens().isNotEmpty(), colors = ChipDefaults.primaryChipColors())
         }
-        if (confirmExit) CompactChip(label = { Text("Discard match") }, onClick = { vm.discard() }, colors = ChipDefaults.secondaryChipColors())
     }
 }
 
@@ -130,12 +132,20 @@ private fun WarmupScreen(vm: WatchViewModel) {
 
     Column(Modifier.fillMaxSize().padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
         Text("Warm-up", fontSize = 13.sp, color = Ball, fontWeight = FontWeight.Bold)
-        Text("%d:%02d".format(secs / 60, secs % 60), fontSize = 34.sp, fontWeight = FontWeight.ExtraBold)
-        Text(if (vm.heartRate > 0) "♥ ${vm.heartRate} bpm" else if (vm.vitalsOk) "♥ --" else "no sensors", fontSize = 16.sp)
-        Text("${vm.kcal.toInt()} kcal", fontSize = 13.sp, color = Color.LightGray)
-        Spacer(Modifier.height(8.dp))
-        CompactChip(label = { Text("End & save") }, onClick = { vm.endWarmup() }, colors = ChipDefaults.primaryChipColors())
-        if (confirmExit) CompactChip(label = { Text("Discard") }, onClick = { vm.discard() }, colors = ChipDefaults.secondaryChipColors())
+        Text("%d:%02d".format(secs / 60, secs % 60), fontSize = 32.sp, fontWeight = FontWeight.ExtraBold)
+        Text((if (vm.heartRate > 0) "♥ ${vm.heartRate} bpm" else if (vm.vitalsOk) "♥ --" else "no sensors") + " · ${vm.kcal.toInt()} kcal",
+            fontSize = 14.sp, color = Color.LightGray)
+        Spacer(Modifier.height(6.dp))
+        if (confirmExit) {
+            CompactChip(label = { Text("Discard warm-up") }, onClick = { vm.discard() }, colors = ChipDefaults.secondaryChipColors())
+            Spacer(Modifier.height(4.dp))
+            CompactChip(label = { Text("Keep") }, onClick = { confirmExit = false }, colors = ChipDefaults.primaryChipColors())
+        } else {
+            // Carry on into a match without stopping the workout.
+            CompactChip(label = { Text("Start match") }, onClick = { vm.startMatchFromWarmup() }, colors = ChipDefaults.primaryChipColors())
+            Spacer(Modifier.height(4.dp))
+            CompactChip(label = { Text("End & save") }, onClick = { vm.endWarmup() }, colors = ChipDefaults.secondaryChipColors())
+        }
     }
 }
 

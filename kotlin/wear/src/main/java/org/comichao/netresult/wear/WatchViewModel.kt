@@ -57,6 +57,18 @@ class WatchViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch { vitalsOk = vitals.start() }
     }
 
+    /**
+     * Carry on from a warm-up into a match without stopping the workout: the vitals keep running and the match
+     * starts at the warm-up's start time, so the whole session (warm-up and match) is one Health Connect entry and
+     * the phone recognises it as this match when it is finished.
+     */
+    fun startMatchFromWarmup() {
+        if (mode != Mode.Warmup) return
+        push(LiveState(rev = System.currentTimeMillis(), opponent = "Opponent", startedAt = startMillis, watch = true))
+        finishing = false
+        mode = Mode.Match
+    }
+
     /** Join the match the phone (or an earlier run of this app) already has going. */
     fun join() {
         val l = live.value ?: return

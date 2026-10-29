@@ -1,9 +1,16 @@
 name: release
+# Releases are normally published locally with `make publish`. Run this by hand (Actions > release > Run workflow)
+# to build and publish an existing tag from CI; it needs the signing secrets described in DEVELOPING.md.
 on:
-  push:
-    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to release, e.g. v0.2.0"
+        required: true
 permissions:
   contents: write
+env:
+  TAG: ${{ inputs.tag }}
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -12,10 +19,12 @@ jobs:
         working-directory: kotlin
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
       - name: Tag must match versionName
         run: |
           VERSION=$(sed -n 's/.*versionName = "\(.*\)".*/\1/p' app/build.gradle.kts)
-          [ "$GITHUB_REF_NAME" = "v$VERSION" ] || { echo "Tag $GITHUB_REF_NAME does not match versionName $VERSION"; exit 1; }
+          [ "$TAG" = "v$VERSION" ] || { echo "Tag $TAG does not match versionName $VERSION"; exit 1; }
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -43,8 +52,8 @@ jobs:
           for m in app wear; do
             [ "$(ls $m/build/outputs/apk/release/*.apk | wc -l)" = 1 ] || { echo "Expected exactly one release APK in $m"; exit 1; }
             APK=$(ls $m/build/outputs/apk/release/*.apk)
-            "$TOOLS/aapt2" dump badging "$APK" | grep -q "versionName='${GITHUB_REF_NAME#v}'" \
-              || { echo "$APK does not contain version ${GITHUB_REF_NAME#v}"; exit 1; }
+            "$TOOLS/aapt2" dump badging "$APK" | grep -q "versionName='${TAG#v}'" \
+              || { echo "$APK does not contain version ${TAG#v}"; exit 1; }
             CERT=$("$TOOLS/apksigner" verify --print-certs "$APK" | sed -n 's/.*certificate SHA-256 digest: //p')
             [ "$CERT" = "$RELEASE_CERT_SHA256" ] || { echo "$APK is signed with $CERT, expected $RELEASE_CERT_SHA256"; exit 1; }
           done
@@ -53,12 +62,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           # `make publish` may already have created this release from a local build.
-          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
-            echo "Release $GITHUB_REF_NAME already exists, nothing to do."
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG already exists, nothing to do."
             exit 0
           fi
           mkdir dist
           cp app/build/outputs/apk/release/*.apk wear/build/outputs/apk/release/*.apk dist/
           (cd dist && sha256sum *.apk > SHA256SUMS)
-          gh release create "$GITHUB_REF_NAME" dist/* \
-            --title "Net Result $GITHUB_REF_NAME" --generate-notes
+          gh release create "$TAG" dist/* \
+            --title "Net Result $TAG" --generate-notes
