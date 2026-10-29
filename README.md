@@ -17,8 +17,8 @@
 </p>
 
 Net Result is a simple, fast tennis match tracker. Log every match you play, watch your win
-rate over time and see how you do against each opponent. No account, no ads, no internet
-connection needed.
+rate over time and see how you do against each opponent, and score the match live from your phone or your watch.
+No account, no ads, no internet connection needed.
 
 ## Install on your phone
 
@@ -32,6 +32,21 @@ You need Android 7.0 or newer. The app isn't on the Play Store, so you install i
 
 To check that a download is intact, download `SHA256SUMS` from the same release and run
 `sha256sum -c SHA256SUMS` in the folder with the files.
+
+### The watch app
+
+The watch app is a separate file in the same release, `netresult-wear-<version>-release.apk`, for Wear OS 3 or newer.
+Watches have no browser, so you install it from a computer with
+[adb](https://developer.android.com/tools/adb) after turning on **Developer options > ADB debugging** (and
+**Wireless debugging**) on the watch:
+
+```bash
+adb connect <watch-ip>:<port>        # shown on the watch under Wireless debugging
+adb install netresult-wear-<version>-release.apk
+```
+
+Keep the phone and watch apps on the same version. The first time you start a match the watch asks for permission
+to read your heart rate and activity.
 
 ### Updating
 
@@ -47,16 +62,45 @@ the file. After installing the new version use **Settings > Import data > CSV**.
   and add a note if you like. Win, draw or loss is worked out for you.
 - **Tie-breaks.** Played a match tie-break instead of a third set (e.g. 10-8)? Tap **TB** on that
   set. It still counts as a set won or lost.
-- **Score a match live.** Tap **Live match**, pick your opponent and tap who won each point. Tennis scoring
-  (deuce, advantage, tie-break at 6-6, best of three) is handled for you, the screen stays on, and **Undo** fixes
-  a mis-tap. The finished match is saved to your history, and optionally recorded in Health Connect as a tennis
-  session that Google Fit can show.
+- **Score a match live, on your phone or your watch.** Tap who won each point and the app keeps the tennis score
+  (see [Live scoring](#live-scoring-on-your-phone-and-your-watch)).
 - **See how you're doing.** The home screen shows matches won, drawn and lost, sets won and
   lost, your set win percentage and your overall win rate, plus your latest matches.
 - **Browse your history.** Filter by opponent to see how a rivalry is going, or group matches
   by opponent. The summary at the top follows your filter.
 - **Fix mistakes.** Tap any match to change the scores, opponent, date or notes, or delete it.
 - **Don't lose a half-finished entry.** Save a draft and pick it up later from the home screen.
+
+## Live scoring on your phone and your watch
+
+<p align="center">
+  <img src="docs/screenshots/live.png" alt="Live match on the phone" width="230">
+</p>
+
+Tap **Live match**, pick your opponent and tap **Point: me** or **Point: <opponent>** after every point. The app
+knows tennis: 15, 30, 40, deuce and advantage, a tie-break at 6-6, best of three sets. **Undo** fixes a mis-tap.
+The screen stays on while you play, and the match is saved to your history when you finish (or finish early, and
+the score so far is kept).
+
+### On your watch (Wear OS)
+
+<p align="center">
+  <img src="docs/screenshots/watch.png" alt="Net Result on a Wear OS watch: joining a match and scoring it" width="560">
+</p>
+
+Install the watch app too (see below) and the two stay in step: a point scored on the watch shows up on the phone
+and the other way round, Undo included. Start a match on either one and the other offers **Join match**. Finish it
+on either, and it is saved once.
+
+- **Match** scores the game and records a tennis workout with your heart rate and calories.
+- **Warm-up** records the same vitals with no score, for the knock-up before a match.
+- If the phone is out of range when you finish, the watch keeps the match and sends it the next time you open the watch app.
+- Opponent names are typed on the phone. A match started on the watch is saved as "Opponent"; tap it in History to
+  rename it.
+
+To see the workout in **Google Fit**, open **Settings > Health Connect > Allow** on the phone once. Sessions are
+written to Health Connect (the replacement for the Google Fit API), and Google Fit and other fitness apps read them
+from there. Nothing is sent anywhere else.
 
 ## Make it yours
 
@@ -78,7 +122,8 @@ from the drop-down in Settings.
 ## Your data stays yours
 
 Everything is stored privately on your phone. Nothing is uploaded, there is no tracking and the
-app never asks for access to your files: backups use Android's own file picker.
+app never asks for access to your files: backups use Android's own file picker. The phone and watch talk to each
+other directly over Bluetooth, and workouts go to Health Connect on your phone only if you allow it.
 
 - **Export** all your matches to a **CSV** (opens in Excel or Google Sheets) or **JSON** file.
 - **Import** a file on a new phone, or to merge in matches from somewhere else. Matches that

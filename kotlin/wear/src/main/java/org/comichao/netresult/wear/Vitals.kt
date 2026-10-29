@@ -1,6 +1,7 @@
 package org.comichao.netresult.wear
 
 import android.content.Context
+import android.util.Log
 import androidx.health.services.client.ExerciseUpdateCallback
 import androidx.health.services.client.HealthServices
 import androidx.health.services.client.data.Availability
@@ -37,7 +38,7 @@ class Vitals(context: Context, private val onHeartRate: (Int) -> Unit, private v
                 .setIsGpsEnabled(false)
                 .build()
         ).await()
-    }.isSuccess
+    }.onFailure { Log.w("Vitals", "Could not start the exercise: $it") }.isSuccess
 
     suspend fun stop() {
         runCatching { client.endExerciseAsync().await() }

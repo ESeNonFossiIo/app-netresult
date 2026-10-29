@@ -22,6 +22,10 @@ import androidx.wear.compose.material.*
 import kotlinx.coroutines.delay
 import org.comichao.netresult.LiveMatch
 
+/** Vitals need heart rate (BODY_SENSORS before Wear OS 6, READ_HEART_RATE from it) and activity recognition. */
+private val sensorPermissions = arrayOf(Manifest.permission.BODY_SENSORS, Manifest.permission.ACTIVITY_RECOGNITION,
+    "android.permission.health.READ_HEART_RATE")
+
 private val Ball = Color(0xFFD5E83A)
 private val Sky = Color(0xFF35B3EE)
 
@@ -66,13 +70,13 @@ private fun HomeScreen(vm: WatchViewModel) {
     val permissions = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
         if (pending == Mode.Match && live != null) vm.join() else vm.start(pending)   // scoring works even if the sensors were refused
     }
-    fun begin(mode: Mode) { pending = mode; permissions.launch(arrayOf(Manifest.permission.BODY_SENSORS, Manifest.permission.ACTIVITY_RECOGNITION)) }
+    fun begin(mode: Mode) { pending = mode; permissions.launch(sensorPermissions) }
 
     Column(Modifier.fillMaxSize().padding(horizontal = 20.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
         live?.let { l ->
             Chip(label = { Text("Join match", fontWeight = FontWeight.Bold) },
                 secondaryLabel = { Text("${l.match.pointLabel(true)}:${l.match.pointLabel(false)} · ${l.match.gamesMe}-${l.match.gamesOpp}") },
-                onClick = { permissions.launch(arrayOf(Manifest.permission.BODY_SENSORS, Manifest.permission.ACTIVITY_RECOGNITION)); pending = Mode.Match },
+                onClick = { permissions.launch(sensorPermissions); pending = Mode.Match },
                 modifier = Modifier.fillMaxWidth(), colors = ChipDefaults.primaryChipColors())
             Spacer(Modifier.height(6.dp))
         }
