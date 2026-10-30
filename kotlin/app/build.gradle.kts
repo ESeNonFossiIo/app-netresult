@@ -14,8 +14,8 @@ android {
         minSdk = 24
         targetSdk = 36
         // Kivy build shipped versionCode 2 / 0.0.4; keep strictly increasing.
-        versionCode = 5
-        versionName = "0.2.1"
+        versionCode = 6
+        versionName = "0.2.2"
     }
 
     signingConfigs {

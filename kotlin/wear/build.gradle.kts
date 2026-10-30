@@ -18,7 +18,7 @@ android {
     defaultConfig {
         applicationId = "org.comichao.netresult"
         minSdk = 30
-        targetSdk = 34
+        targetSdk = 36
         versionCode = appVersionCode
         versionName = appVersionName
     }
