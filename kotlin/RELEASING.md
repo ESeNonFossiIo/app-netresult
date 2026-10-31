@@ -49,7 +49,9 @@ Rules:
 ### Codes already used in Play (never reuse)
 
 `1`, `2`, `6`, `7`, `10213` (earlier builds), and the test uploads `26103101`, `1026103101`, `2026103101` and
-`2026103151`. Next free phone code: `10214` (watch `20214`). Update this list after each Play upload.
+`2026103151`. Also `10214` (phone, shipped as 0.2.5) and `20214` (the watch bundle of 0.2.5, which Play marked
+"superseded" and never published, so the code is spent). Next free phone code: `10215` (watch `20215`).
+Update this list after each Play upload.
 
 ### History: why it is a counter
 
