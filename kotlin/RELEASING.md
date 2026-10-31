@@ -89,6 +89,23 @@ Play Console notes:
   **Add from library** instead.
 - A release can only be discarded while it is the latest one on its track. Discard the newer draft first.
 - Saving a tester or country change only stages it. It is sent when you submit changes in Publishing overview.
+- **Wear OS must be opted in**, once per app: Test and release > Advanced settings > Form factors > Wear OS must
+  show all steps done, including "Opt-in to Wear OS and agree to the review policy". Until then, watch releases
+  are accepted and even "published", but the Wear OS track stays Inactive and each release reads "Superseded by
+  another release · Not published", with no rollout button. Opting in sends the watch through Google's Wear OS
+  quality review. (Done on 2026-10-31.)
+- The same bundle can be used on several tracks. Attach it with Add from library; it does not use a new code.
+
+### Tracks in use
+
+| Track | Form factor | Serves | Testers |
+|---|---|---|---|
+| Closed testing - Alpha | Phone | `10214` (0.2.5) | Google Groups `briscolai-testers`, `testcircle-testers` |
+| Closed testing - Alpha | Wear OS | `20214` (0.2.5); `20215` (0.2.6) in review | same groups |
+| Internal testing | Phone | `10214` (0.2.5); replaced `1` (0.0.3, target SDK 35) that caused the target API warning | internal testers |
+
+Keep this table up to date after each Play release. Any old build left active on any track (internal included)
+counts for Play's target API check.
 
 Checks before pressing send in Play: the version name and code match this file, the bundle is signed with the
 release key (`keytool -printcert -jarfile <aab>` shows SHA-256 starting `C9:0C:D6:D3`), and nothing from an
