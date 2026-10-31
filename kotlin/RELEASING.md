@@ -15,45 +15,56 @@ make bump PART=patch          # or minor, major, or an exact X.Y.Z
 
 ## Version code (the number Play sorts updates by)
 
-Format: **`YYYYMMDDNN`**, the release date followed by a two-digit counter. Compared as numbers it sorts from
-oldest to newest, which is what Play needs. It stays below Play's limit of 2,100,000,000 until the year 2099.
+A **plain counter**. `make bump` adds 1 to the phone's `versionCode` in `app/build.gradle.kts`, and that is all you
+do. Do not encode dates in it.
 
-| Build | Counter | Example (31 Oct 2026) |
+| Build | Version code | Example |
 |---|---|---|
-| Phone | `01`-`49`, first release that day is `01` | `2026103101` |
-| Watch, uploaded to Play | `51`-`99`, first release that day is `51` | `2026103151` |
+| Phone (and the watch APK on GitHub) | the counter itself | `10214` |
+| Watch bundle uploaded to Play | the counter plus 10000 | `20214` |
+
+The watch offset is automatic: `wear/build.gradle.kts` adds 10000 when the bundle is built with `-PplayBundle`
+(see Releasing, step 4). It exists because Play counts version codes across the whole app, so the phone and the
+watch bundle cannot share one. The two ranges cannot meet until the counter reaches 10000 more releases from now.
 
 Rules:
 
-1. **A code can be used once, ever.** Play keeps every code of every upload, even if you discard the draft or the
-   bundle. Re-uploading changed code with the same code fails with "Version code N has already been used".
+1. **A code can be used once, ever.** Play keeps every code of every upload, even if you discard the release
+   or the bundle. Uploading a changed build with a code already used fails with "Version code N has already been
+   used". If a rebuilt bundle needs uploading, the code must go up.
 2. **Codes only go up.** A device is only offered an update whose code is higher than the installed one.
-3. **Phone and watch must differ.** Play counts codes across the whole app, so one code cannot be used by both
-   form factors. This is why the watch has its own counter range (51-99).
-4. **The date is the release date,** not the commit date. If you release twice in a day, use `02`, `03`, ...
-   If a release is rebuilt after an upload to Play, the code must go up even though the version name stays.
-5. **Never use a code that is lower than one already released.** Codes `10213` and `2` are old test builds still
-   in Play; everything today is far above them.
+   Android also refuses to install an APK whose code is lower than the installed one.
+3. **Keep the jump small.** Play's release check flags a code far above the previous one ("significantly higher")
+   as an error and warns it will exhaust Play's limit of 2,100,000,000. Counting up by 1 never trips it. This is
+   why we do not use dates or large offsets.
+4. **Never reuse a code from the list below,** and add to the list whenever a code is spent without shipping.
 
 ### Where the codes live
 
-- Phone: `versionCode` in `app/build.gradle.kts`. `make bump` adds 1 to it, so **after every bump set it by
-  hand** to today's date plus the counter.
-- Watch for GitHub: the APK takes the phone's code, because `make publish` checks that every APK matches
+- Phone: `versionCode` in `app/build.gradle.kts`.
+- Watch on GitHub: the APK takes the phone's code, because `make publish` checks that every APK matches
   `app/build.gradle.kts`.
-- Watch for Play: `playWearVersionCode` at the top of `wear/build.gradle.kts`. Change it by hand whenever you
-  upload a new watch bundle, to the same date and a counter from 51 up.
+- Watch on Play: `playWearVersionCode` at the top of `wear/build.gradle.kts` (phone code + 10000).
 
-### Codes already used (never reuse)
+### Codes already used in Play (never reuse)
 
-`2`, `5`, `6`, `7`, `10213` (earlier builds); `26103101` and `1026103101` (first Play test uploads, replaced by the
-scheme above). Add to this list when a code is spent without shipping.
+`1`, `2`, `6`, `7`, `10213` (earlier builds), and the test uploads `26103101`, `1026103101`, `2026103101` and
+`2026103151`. Next free phone code: `10214` (watch `20214`). Update this list after each Play upload.
+
+### History: why it is a counter
+
+The first Play uploads used `YYYYMMDDNN`-style codes (for example `2026103101`) so they would sort by date. Play's
+release check rejected that scheme as "significantly higher than your previous version code", and the date
+codes also sit close to Play's ceiling. They were replaced with the plain counter above, which starts at `10214`
+because an early build already used `10213`. GitHub release `v0.2.4` was built with `2026103101`, so a phone with that
+APK installed cannot be updated to a lower code. Reinstall from the newer APK after exporting your data
+(Settings > Export data) if that ever matters.
 
 ## Releasing
 
 Start with a clean, committed and pushed tree: `make publish` refuses to run otherwise.
 
-1. Bump the name, then set the phone code and, if you upload the watch to Play, `playWearVersionCode`.
+1. `make bump PART=patch` (or minor, major). That moves the name and the code together.
 2. Commit and push.
 3. GitHub: from `kotlin/`, run `make publish`. It builds both signed APKs, checks name, code and signing key,
    and creates the `v<versionName>` release with `SHA256SUMS`. The signing variables come from `env.mk`.
@@ -67,7 +78,15 @@ Start with a clean, committed and pushed tree: `make publish` refuses to run oth
    `wear/build/outputs/bundle/release/netresult-wear-<version>-release.aab`. Copy them to
    `releases/play-upload-<version>/` (hidden from git) before uploading.
 5. In Play Console, upload the phone bundle in **Closed testing - Alpha** and the watch bundle under
-   **Wear OS > Closed testing - Alpha**. Add the release notes, then send both for review together.
+   **Wear OS > Closed testing - Alpha**. Add the release notes, then **Next** (Preview and confirm), start the
+   rollout, and send both for review together from Publishing overview.
+
+Play Console notes:
+
+- A bundle Play has already seen cannot be uploaded again, even after you discard the release. Attach it with
+  **Add from library** instead.
+- A release can only be discarded while it is the latest one on its track. Discard the newer draft first.
+- Saving a tester or country change only stages it. It is sent when you submit changes in Publishing overview.
 
 Checks before pressing send in Play: the version name and code match this file, the bundle is signed with the
 release key (`keytool -printcert -jarfile <aab>` shows SHA-256 starting `C9:0C:D6:D3`), and nothing from an
@@ -75,6 +94,6 @@ older draft is still in the track.
 
 ## Don'ts
 
-- Don't plan a release by reusing a code, or by guessing: look at the table above and at Play's bundle explorer.
+- Don't plan a release by reusing a code, or by guessing: look at the list above and at Play's bundle explorer.
 - Don't pick a version name, code scheme or upload target without agreeing it first.
-- Don't move the watch to a different range without updating the table and rule 3.
+- Don't put dates in the code or add big offsets; Play will flag the jump.

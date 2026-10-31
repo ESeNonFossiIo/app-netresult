@@ -13,9 +13,10 @@ android {
         applicationId = "org.comichao.netresult"
         minSdk = 24
         targetSdk = 36
-        // YYYYMMDDNN: release date plus a 01-49 counter for that day. See RELEASING.md before changing it.
-        versionCode = 2026103101
-        versionName = "0.2.4"
+        // A plain counter that `make bump` adds 1 to. Play remembers every code ever used, so never reuse or
+        // lower it. See RELEASING.md before changing it.
+        versionCode = 10214
+        versionName = "0.2.5"
     }
 
     signingConfigs {
