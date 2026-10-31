@@ -8,6 +8,8 @@ plugins {
 val appBuild = file("../app/build.gradle.kts").readText()
 val appVersionName = Regex("""versionName\s*=\s*"([^"]+)"""").find(appBuild)!!.groupValues[1]
 val appVersionCode = Regex("""versionCode\s*=\s*(\d+)""").find(appBuild)!!.groupValues[1].toInt()
+// Version code of the watch bundle uploaded to Play: YYYYMMDD + 51..99, advanced by hand when the watch app changes.
+val playWearVersionCode = 2026103151
 
 // Wear OS companion: scores a match (or records a warm-up) and sends it to the phone app.
 // The application id must equal the phone app's so the Data Layer connects them.
@@ -19,7 +21,9 @@ android {
         applicationId = "org.comichao.netresult"
         minSdk = 30
         targetSdk = 36
-        versionCode = appVersionCode
+        // Play wants a different version code per form factor, so bundles for Play (-PplayBundle) use their
+        // own YYYYMMDDNN with a 51-99 counter. The APK on GitHub keeps the phone's code. See RELEASING.md.
+        versionCode = if (project.hasProperty("playBundle")) playWearVersionCode else appVersionCode
         versionName = appVersionName
     }
 

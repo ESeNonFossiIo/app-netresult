@@ -13,9 +13,9 @@ android {
         applicationId = "org.comichao.netresult"
         minSdk = 24
         targetSdk = 36
-        // Kivy build shipped versionCode 2 / 0.0.4; keep strictly increasing.
-        versionCode = 7
-        versionName = "0.2.3"
+        // YYYYMMDDNN: release date plus a 01-49 counter for that day. See RELEASING.md before changing it.
+        versionCode = 2026103101
+        versionName = "0.2.4"
     }
 
     signingConfigs {
