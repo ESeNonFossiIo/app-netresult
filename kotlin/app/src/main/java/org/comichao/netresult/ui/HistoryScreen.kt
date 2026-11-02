@@ -1,5 +1,6 @@
 package org.comichao.netresult.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,6 +9,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -28,6 +31,8 @@ fun HistoryScreen(vm: MainViewModel, onBack: () -> Unit) {
     val opponents by vm.opponents.collectAsState()
     var filter by rememberSaveable { mutableStateOf("") }
     var grouped by rememberSaveable { mutableStateOf(false) }
+    // Opponents whose games are shown while grouped; every group starts collapsed.
+    var expanded by rememberSaveable { mutableStateOf(listOf<String>()) }
     var editing by remember { mutableStateOf<Game?>(null) }
     var menu by remember { mutableStateOf(false) }
 
@@ -61,12 +66,11 @@ fun HistoryScreen(vm: MainViewModel, onBack: () -> Unit) {
             LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp), contentPadding = PaddingValues(bottom = 24.dp)) {
                 if (grouped) {
                     shown.groupBy { it.opponent }.toSortedMap().forEach { (opp, list) ->
+                        val open = opp in expanded
                         item(key = "h-$opp") {
-                            val st = computeStats(list)
-                            Text("$opp  —  ${st.wins}W ${st.draws}D ${st.losses}L", Modifier.padding(top = 8.dp),
-                                style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.primary)
+                            OpponentHeader(opp, computeStats(list), open) { expanded = if (open) expanded - opp else expanded + opp }
                         }
-                        items(list, key = { it.id }) { GameCard(it, showOpponent = false) { editing = it } }
+                        if (open) items(list, key = { it.id }) { GameCard(it, showOpponent = false) { editing = it } }
                     }
                 } else items(shown, key = { it.id }) { GameCard(it, showOpponent = true) { editing = it } }
             }
@@ -75,6 +79,43 @@ fun HistoryScreen(vm: MainViewModel, onBack: () -> Unit) {
 
     editing?.let { g -> EditDialog(g, opponents, vm) { editing = null } }
 }
+
+/** Collapsible group header: name and win rate, W/D/L in fixed columns, and a status-coloured bar. */
+@Composable
+private fun OpponentHeader(opponent: String, st: Stats, open: Boolean, onClick: () -> Unit) {
+    // Win rate and bar share one colour: green when ahead, red when behind, the draw colour when level.
+    val tone = when {
+        st.wins > st.losses -> WinFg
+        st.wins < st.losses -> LossFg
+        else -> DrawFg
+    }
+    Card(Modifier.fillMaxWidth().clickable(onClick = onClick), shape = MaterialTheme.shapes.medium,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+        elevation = CardDefaults.cardElevation(1.dp)) {
+        Column {
+            Row(Modifier.padding(start = 16.dp, end = 8.dp, top = 12.dp, bottom = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+                Column(Modifier.weight(1f)) {
+                    Text(opponent, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium, maxLines = 1)
+                    Text("${st.winPct}%", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, color = tone)
+                }
+                Tally(st.wins, stringResource(R.string.result_win), WinFg)
+                Tally(st.draws, stringResource(R.string.result_draw), DrawFg)
+                Tally(st.losses, stringResource(R.string.result_loss), LossFg)
+                Icon(if (open) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown, null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+            Box(Modifier.fillMaxWidth().height(4.dp).background(tone))
+        }
+    }
+}
+
+/** One fixed-width W/D/L column, so the numbers line up from group to group. */
+@Composable
+private fun Tally(value: Int, label: String, color: androidx.compose.ui.graphics.Color) =
+    Column(Modifier.width(44.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+        Text("$value", color = color, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+        Text(label.take(1), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
 
 @Composable
 private fun Stat(value: String, label: String, color: androidx.compose.ui.graphics.Color) =
