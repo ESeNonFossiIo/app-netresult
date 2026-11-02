@@ -5,6 +5,7 @@ import com.google.android.gms.wearable.Wearable
 import kotlinx.coroutines.tasks.await
 import org.comichao.netresult.SESSION_PATH
 import org.comichao.netresult.WatchSession
+import androidx.core.content.edit
 
 /**
  * Sends finished sessions to the phone. A session the phone could not be reached for is kept and retried
@@ -17,12 +18,12 @@ class PhoneLink(private val context: Context) {
     suspend fun send(session: WatchSession): Boolean {
         val json = session.toJson()
         if (deliver(json)) return true
-        prefs.edit().putStringSet("sessions", pending() + json).apply()
+        prefs.edit { putStringSet("sessions", pending() + json) }
         return false
     }
 
     suspend fun retryPending() {
-        for (json in pending()) if (deliver(json)) prefs.edit().putStringSet("sessions", pending() - json).apply()
+        for (json in pending()) if (deliver(json)) prefs.edit { putStringSet("sessions", pending() - json) }
     }
 
     fun pendingCount() = pending().size

@@ -133,7 +133,7 @@ fun parseCsv(text: String): List<List<String>> {
     val cur = StringBuilder()
     var inQuotes = false
     var i = 0
-    val t = text.removePrefix("﻿")
+    val t = text.removePrefix("\uFEFF")
     while (i < t.length) {
         val c = t[i]
         when {

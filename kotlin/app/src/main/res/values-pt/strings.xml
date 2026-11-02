@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Net Result</string>
     <string name="log_game_btn">+ Registar Jogo</string>
     <string name="view_history">Ver Histórico</string>
@@ -12,11 +12,11 @@
     <string name="back">Voltar</string>
     <string name="date">Data</string>
     <string name="opponent">Adversário</string>
-    <string name="sets_label">Sets  (tiebreaks OK ex. 7-6, 10-8)</string>
+    <string name="sets_label" tools:ignore="TypographyDashes">Sets  (tiebreaks OK ex. 7-6, 10-8)</string>
     <string name="notes">Notas (opcional)</string>
     <string name="notes_hint">ex. Excelente serviço</string>
     <string name="add_set">+ Adicionar set</string>
-    <string name="tiebreak_hint">Toque em TB para marcar um set ganho no tie-break do jogo (ex. 10-8). Continua a contar como set ganho.</string>
+    <string name="tiebreak_hint" tools:ignore="TypographyDashes">Toque em TB para marcar um set ganho no tie-break do jogo (ex. 10-8). Continua a contar como set ganho.</string>
     <string name="result_win">Vitória</string>
     <string name="result_loss">Derrota</string>
     <string name="result_draw">Empate</string>
@@ -29,23 +29,15 @@
     <string name="set_win_pct" formatted="false">% sets</string>
     <string name="win_rate">Taxa de vitória</string>
     <string name="history">Histórico</string>
-    <string name="history_subtitle">Filtrar por adversário ou ver tudo</string>
     <string name="all_opponents">Todos</string>
-    <string name="opponent_label">Adversário:</string>
     <string name="group_by_opponent">Agrupar por adversário</string>
-    <string name="add_new_opponent">+ Novo</string>
     <string name="enter_opponent">Nome do novo adversário</string>
     <string name="settings">Definições</string>
-    <string name="settings_subtitle">Importar, exportar e gerir dados</string>
     <string name="language">Idioma</string>
     <string name="export_data">Exportar dados</string>
     <string name="export_save_msg">Escolha uma pasta para guardar os seus jogos num ficheiro.</string>
-    <string name="export_csv">Exportar CSV</string>
-    <string name="export_json">Exportar JSON</string>
     <string name="import_data">Importar dados</string>
     <string name="import_pick_msg">Percorra os seus ficheiros e selecione um para adicionar jogos.</string>
-    <string name="import_csv">Importar CSV</string>
-    <string name="import_json">Importar JSON</string>
     <string name="danger_zone">Zona de perigo</string>
     <string name="delete_all_msg">Apagar todo o histórico de jogos permanentemente.</string>
     <string name="reset_all_data">Apagar todos os dados</string>
@@ -62,23 +54,9 @@
     <string name="error">Erro</string>
     <string name="done">Concluído</string>
     <string name="ok">OK</string>
-    <string name="saved">Guardado</string>
     <string name="confirm">Confirmar</string>
     <string name="confirm_import_title">Confirmar importação</string>
     <string name="confirm_import_body">Importar %1$s?</string>
-    <string name="cancel_import_title">Cancelar importação?</string>
-    <string name="cancel_import_body">Nenhum dado será importado. Ir para a página inicial?</string>
-    <string name="pick_file">Selecionar ficheiro .%1$s</string>
-    <string name="choose_save_folder">Escolha uma pasta para o ficheiro .%1$s</string>
-    <string name="up">Acima</string>
-    <string name="open">Abrir</string>
-    <string name="save_here">Guardar aqui</string>
-    <string name="filename_hint">Nome do ficheiro</string>
-    <string name="no_selection">Nenhum ficheiro selecionado</string>
-    <string name="selected_file">Selecionado: %1$s</string>
-    <string name="downloads">Transferências</string>
-    <string name="device_storage">Armazenamento</string>
-    <string name="empty_folder">Esta pasta está vazia</string>
     <string name="version">Versão</string>
     <string name="palette">Tema de cores</string>
     <string name="palette_ball">Bola</string>

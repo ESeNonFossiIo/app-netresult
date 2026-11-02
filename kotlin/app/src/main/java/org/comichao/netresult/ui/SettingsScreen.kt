@@ -21,6 +21,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLocale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.appcompat.app.AppCompatDelegate
@@ -54,7 +55,7 @@ fun SettingsScreen(vm: MainViewModel, onBack: () -> Unit) {
         uri?.let { pendingImport = it to pendingExportJson }
     }
 
-    val current = AppCompatDelegate.getApplicationLocales().toLanguageTags().take(2).ifEmpty { java.util.Locale.getDefault().language }
+    val current = AppCompatDelegate.getApplicationLocales().toLanguageTags().take(2).ifEmpty { LocalLocale.current.platformLocale.language }
 
     Scaffold(topBar = { BrandTopBar(stringResource(R.string.settings), onBack) }) { pad ->
         Column(Modifier.padding(pad).verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
@@ -68,7 +69,7 @@ fun SettingsScreen(vm: MainViewModel, onBack: () -> Unit) {
                 var open by remember { mutableStateOf(false) }
                 ExposedDropdownMenuBox(open, { open = !open }) {
                     OutlinedTextField(LANGS.firstOrNull { it.first == current }?.second ?: "English", {}, readOnly = true,
-                        modifier = Modifier.menuAnchor().fillMaxWidth(), singleLine = true,
+                        modifier = Modifier.menuAnchor(MenuAnchorType.PrimaryNotEditable).fillMaxWidth(), singleLine = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(open) })
                     ExposedDropdownMenu(open, { open = false }) {
                         LANGS.forEach { (code, name) ->

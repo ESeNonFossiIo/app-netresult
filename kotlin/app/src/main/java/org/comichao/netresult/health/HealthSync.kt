@@ -9,6 +9,7 @@ import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord
 import androidx.health.connect.client.records.ExerciseSessionRecord
 import androidx.health.connect.client.records.HeartRateRecord
 import androidx.health.connect.client.records.Record
+import androidx.health.connect.client.records.metadata.Metadata
 import androidx.health.connect.client.units.Energy
 import java.time.Instant
 import java.time.ZoneId
@@ -26,6 +27,7 @@ object HealthSync {
         HealthPermission.getWritePermission(ActiveCaloriesBurnedRecord::class),
     )
 
+    @Suppress("ObsoleteSdkInt") // the object needs API 26 (see @RequiresApi); callers on older devices check here first
     fun supported() = Build.VERSION.SDK_INT >= 26
 
     fun available(context: Context) =
@@ -42,15 +44,15 @@ object HealthSync {
         val end = Instant.ofEpochMilli(maxOf(endMillis, startMillis + 1000))
         val zone = ZoneId.systemDefault().rules
         val records = mutableListOf<Record>(ExerciseSessionRecord(
-            startTime = start, startZoneOffset = zone.getOffset(start), endTime = end, endZoneOffset = zone.getOffset(end),
+            startTime = start, startZoneOffset = zone.getOffset(start), endTime = end, endZoneOffset = zone.getOffset(end), metadata = Metadata.unknownRecordingMethod(),
             exerciseType = ExerciseSessionRecord.EXERCISE_TYPE_TENNIS, title = title,
         ))
         val samples = heartRate.filter { it.first in startMillis..endMillis && it.second > 0 }
             .map { HeartRateRecord.Sample(Instant.ofEpochMilli(it.first), it.second.toLong()) }
         if (samples.isNotEmpty()) records += HeartRateRecord(
-            startTime = start, startZoneOffset = zone.getOffset(start), endTime = end, endZoneOffset = zone.getOffset(end), samples = samples)
+            startTime = start, startZoneOffset = zone.getOffset(start), endTime = end, endZoneOffset = zone.getOffset(end), metadata = Metadata.unknownRecordingMethod(), samples = samples)
         if (kcal != null && kcal > 0) records += ActiveCaloriesBurnedRecord(
-            startTime = start, startZoneOffset = zone.getOffset(start), endTime = end, endZoneOffset = zone.getOffset(end),
+            startTime = start, startZoneOffset = zone.getOffset(start), endTime = end, endZoneOffset = zone.getOffset(end), metadata = Metadata.unknownRecordingMethod(),
             energy = Energy.kilocalories(kcal))
         HealthConnectClient.getOrCreate(context).insertRecords(records)
     }

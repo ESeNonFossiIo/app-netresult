@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Net Result</string>
     <string name="log_game_btn">+ Nuova partita</string>
     <string name="view_history">Cronologia</string>
@@ -12,11 +12,11 @@
     <string name="back">Indietro</string>
     <string name="date">Data</string>
     <string name="opponent">Avversario</string>
-    <string name="sets_label">Set  (tiebreak OK es. 7-6, 10-8)</string>
+    <string name="sets_label" tools:ignore="TypographyDashes">Set  (tiebreak OK es. 7-6, 10-8)</string>
     <string name="notes">Note (opzionale)</string>
     <string name="notes_hint">es. Ottimo servizio</string>
     <string name="add_set">+ Aggiungi set</string>
-    <string name="tiebreak_hint">Tocca TB per contrassegnare un set vinto al tie-break di partita (es. 10-8). Conta comunque come set vinto.</string>
+    <string name="tiebreak_hint" tools:ignore="TypographyDashes">Tocca TB per contrassegnare un set vinto al tie-break di partita (es. 10-8). Conta comunque come set vinto.</string>
     <string name="result_win">Vittoria</string>
     <string name="result_loss">Sconfitta</string>
     <string name="result_draw">Pareggio</string>
@@ -29,23 +29,15 @@
     <string name="set_win_pct" formatted="false">% set</string>
     <string name="win_rate" formatted="false">% vittorie</string>
     <string name="history">Cronologia</string>
-    <string name="history_subtitle">Filtra per avversario o sfoglia tutto</string>
     <string name="all_opponents">Tutti</string>
-    <string name="opponent_label">Avversario:</string>
     <string name="group_by_opponent">Raggruppa per avversario</string>
-    <string name="add_new_opponent">+ Nuovo</string>
     <string name="enter_opponent">Nome nuovo avversario</string>
     <string name="settings">Impostazioni</string>
-    <string name="settings_subtitle">Importa, esporta e gestisci i dati</string>
     <string name="language">Lingua</string>
     <string name="export_data">Esporta dati</string>
     <string name="export_save_msg">Scegli una cartella in cui salvare le partite come file.</string>
-    <string name="export_csv">Esporta CSV</string>
-    <string name="export_json">Esporta JSON</string>
     <string name="import_data">Importa dati</string>
     <string name="import_pick_msg">Sfoglia i file e selezionane uno per aggiungere partite.</string>
-    <string name="import_csv">Importa CSV</string>
-    <string name="import_json">Importa JSON</string>
     <string name="danger_zone">Zona pericolosa</string>
     <string name="delete_all_msg">Elimina definitivamente tutta la cronologia.</string>
     <string name="reset_all_data">Azzera tutti i dati</string>
@@ -62,23 +54,9 @@
     <string name="error">Errore</string>
     <string name="done">Fatto</string>
     <string name="ok">OK</string>
-    <string name="saved">Salvato</string>
     <string name="confirm">Conferma</string>
     <string name="confirm_import_title">Conferma importazione</string>
     <string name="confirm_import_body">Importare %1$s?</string>
-    <string name="cancel_import_title">Annullare l\'importazione?</string>
-    <string name="cancel_import_body">Nessun dato verrà importato. Torna alla home?</string>
-    <string name="pick_file">Seleziona file .%1$s</string>
-    <string name="choose_save_folder">Scegli una cartella per il file .%1$s</string>
-    <string name="up">Su</string>
-    <string name="open">Apri</string>
-    <string name="save_here">Salva qui</string>
-    <string name="filename_hint">Nome del file</string>
-    <string name="no_selection">Nessun file selezionato</string>
-    <string name="selected_file">Selezionato: %1$s</string>
-    <string name="downloads">Download</string>
-    <string name="device_storage">Memoria dispositivo</string>
-    <string name="empty_folder">Questa cartella è vuota</string>
     <string name="version">Versione</string>
     <string name="palette">Tema colore</string>
     <string name="palette_ball">Palla</string>

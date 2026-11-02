@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Net Result</string>
     <string name="log_game_btn">+ Registrar Partido</string>
     <string name="view_history">Ver Historial</string>
@@ -12,11 +12,11 @@
     <string name="back">Atrás</string>
     <string name="date">Fecha</string>
     <string name="opponent">Adversario</string>
-    <string name="sets_label">Sets  (tiebreaks OK p.ej. 7-6, 10-8)</string>
+    <string name="sets_label" tools:ignore="TypographyDashes">Sets  (tiebreaks OK p.ej. 7-6, 10-8)</string>
     <string name="notes">Notas (opcional)</string>
     <string name="notes_hint">p.ej. Gran primer servicio</string>
     <string name="add_set">+ Añadir set</string>
-    <string name="tiebreak_hint">Toca TB para marcar un set ganado en el tie-break del partido (p. ej. 10-8). Sigue contando como set ganado.</string>
+    <string name="tiebreak_hint" tools:ignore="TypographyDashes">Toca TB para marcar un set ganado en el tie-break del partido (p. ej. 10-8). Sigue contando como set ganado.</string>
     <string name="result_win">Victoria</string>
     <string name="result_loss">Derrota</string>
     <string name="result_draw">Empate</string>
@@ -29,23 +29,15 @@
     <string name="set_win_pct" formatted="false">% sets</string>
     <string name="win_rate">Ratio de victoria</string>
     <string name="history">Historial</string>
-    <string name="history_subtitle">Filtrar por adversario o ver todo</string>
     <string name="all_opponents">Todos</string>
-    <string name="opponent_label">Adversario:</string>
     <string name="group_by_opponent">Agrupar por adversario</string>
-    <string name="add_new_opponent">+ Nuevo</string>
     <string name="enter_opponent">Nombre del nuevo adversario</string>
     <string name="settings">Ajustes</string>
-    <string name="settings_subtitle">Importar, exportar y gestionar datos</string>
     <string name="language">Idioma</string>
     <string name="export_data">Exportar datos</string>
     <string name="export_save_msg">Elige una carpeta donde guardar tus partidos como archivo.</string>
-    <string name="export_csv">Exportar CSV</string>
-    <string name="export_json">Exportar JSON</string>
     <string name="import_data">Importar datos</string>
     <string name="import_pick_msg">Explora tus archivos y selecciona uno para añadir partidos.</string>
-    <string name="import_csv">Importar CSV</string>
-    <string name="import_json">Importar JSON</string>
     <string name="danger_zone">Zona de peligro</string>
     <string name="delete_all_msg">Eliminar permanentemente todo el historial de partidos.</string>
     <string name="reset_all_data">Borrar todos los datos</string>
@@ -62,23 +54,9 @@
     <string name="error">Error</string>
     <string name="done">Hecho</string>
     <string name="ok">OK</string>
-    <string name="saved">Guardado</string>
     <string name="confirm">Confirmar</string>
     <string name="confirm_import_title">Confirmar importación</string>
     <string name="confirm_import_body">¿Importar %1$s?</string>
-    <string name="cancel_import_title">¿Cancelar importación?</string>
-    <string name="cancel_import_body">No se importarán datos. ¿Volver al inicio?</string>
-    <string name="pick_file">Seleccionar archivo .%1$s</string>
-    <string name="choose_save_folder">Elige una carpeta para el archivo .%1$s</string>
-    <string name="up">Subir</string>
-    <string name="open">Abrir</string>
-    <string name="save_here">Guardar aquí</string>
-    <string name="filename_hint">Nombre del archivo</string>
-    <string name="no_selection">Ningún archivo seleccionado</string>
-    <string name="selected_file">Seleccionado: %1$s</string>
-    <string name="downloads">Descargas</string>
-    <string name="device_storage">Almacenamiento</string>
-    <string name="empty_folder">Esta carpeta está vacía</string>
     <string name="version">Versión</string>
     <string name="palette">Tema de color</string>
     <string name="palette_ball">Pelota</string>
