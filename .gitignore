@@ -6,6 +6,9 @@ release.mk
 extras/*.keystore
 extras/*.keystore.*
 extras/service-account.json
+# safety nets: keystores anywhere in the tree
+*.keystore
+*.jks
 
 # Android / Gradle (see also kotlin/.gitignore)
 .gradle/
