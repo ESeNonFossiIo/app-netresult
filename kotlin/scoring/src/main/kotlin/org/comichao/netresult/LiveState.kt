@@ -21,7 +21,14 @@ data class LiveState(
     val history: List<LiveMatch> = emptyList(),
     val watch: Boolean = false,
     val health: Boolean = false,
+    /** A doubles match: [opponent] and [opponent2] play against you and your [partner] (all empty for singles). */
+    val doubles: Boolean = false,
+    val partner: String = "",
+    val opponent2: String = "",
 ) {
+    /** What the screens call the other side: "Anna" for singles, "Anna / Bob" for doubles. */
+    val label get() = if (doubles && opponent2.isNotBlank()) "$opponent / $opponent2" else opponent
+
     fun point(me: Boolean) = copy(rev = nextRev(), match = match.point(me), history = history + match)
     fun undo() = if (history.isEmpty()) this else copy(rev = nextRev(), match = history.last(), history = history.dropLast(1))
     fun withWatch() = copy(rev = nextRev(), watch = true)
@@ -29,6 +36,7 @@ data class LiveState(
 
     fun toJson(): String = JSONObject()
         .put("rev", rev).put("opp", opponent).put("start", startedAt).put("watch", watch).put("health", health)
+        .put("doubles", doubles).put("partner", partner).put("opp2", opponent2)
         .put("match", match.toJson()).put("history", JSONArray(history.map { it.toJson() }))
         .toString()
 
@@ -36,7 +44,7 @@ data class LiveState(
         fun fromJson(text: String): LiveState = JSONObject(text).let { o ->
             LiveState(o.getLong("rev"), o.getString("opp"), o.getLong("start"), matchFromJson(o.getJSONObject("match")),
                 o.getJSONArray("history").let { a -> (0 until a.length()).map { matchFromJson(a.getJSONObject(it)) } },
-                o.optBoolean("watch"), o.optBoolean("health"))
+                o.optBoolean("watch"), o.optBoolean("health"), o.optBoolean("doubles"), o.optString("partner"), o.optString("opp2"))
         }
     }
 }

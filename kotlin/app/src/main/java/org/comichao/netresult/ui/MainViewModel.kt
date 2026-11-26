@@ -15,6 +15,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     val games = repo.games.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
     val opponents = repo.opponents.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    val partners = repo.partners.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    val venues = repo.venues.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
     val hasDraft = repo.draft.map { it != null }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
     val stats = games.map { computeStats(it) }.stateIn(viewModelScope, SharingStarted.Eagerly, Stats())
 
@@ -46,9 +48,10 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch { LiveLink.push(getApplication(), s) }
     }
 
-    fun startLive(opponent: String, health: Boolean) {
+    fun startLive(opponent: String, health: Boolean, doubles: Boolean = false, partner: String = "", opponent2: String = "") {
         val now = System.currentTimeMillis()
-        push(LiveState(rev = now, opponent = opponent.trim(), startedAt = now, health = health))
+        push(LiveState(rev = now, opponent = opponent.trim(), startedAt = now, health = health,
+            doubles = doubles, partner = if (doubles) partner.trim() else "", opponent2 = if (doubles) opponent2.trim() else ""))
     }
     fun livePoint(me: Boolean) { live.value?.let { push(it.point(me)) } }
     fun liveUndo() { live.value?.let { push(it.undo()) } }
@@ -65,11 +68,21 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun liveSave(onDone: () -> Unit) = viewModelScope.launch {
         val l = live.value ?: return@launch
         val sets = l.match.tokens()
-        if (sets.isNotEmpty()) repo.addGame(java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date()), l.opponent, sets, "")
+        if (sets.isNotEmpty()) {
+            val now = System.currentTimeMillis()
+            // A live match knows when it started and how long it lasted, so those are filled in for you.
+            val info = GameInfo(
+                date = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).format(java.util.Date(l.startedAt)), opponent = l.opponent,
+                doubles = l.doubles, partner = l.partner, opponent2 = l.opponent2,
+                startTime = java.text.SimpleDateFormat("HH:mm", java.util.Locale.US).format(java.util.Date(l.startedAt)),
+                duration = ((now - l.startedAt) / 60_000).toInt().takeIf { it > 0 },
+            )
+            repo.addGame(info, sets)
+        }
         if (l.health && !l.watch && android.os.Build.VERSION.SDK_INT >= 26) runCatching {
             val ctx = getApplication<Application>()
             if (org.comichao.netresult.health.HealthSync.granted(ctx))
-                org.comichao.netresult.health.HealthSync.writeSession(ctx, "Tennis vs ${l.opponent}", l.startedAt, System.currentTimeMillis())
+                org.comichao.netresult.health.HealthSync.writeSession(ctx, "Tennis vs ${l.label}", l.startedAt, System.currentTimeMillis())
         }
         LiveBus.end(getApplication(), true)
         LiveLink.end(getApplication(), true)
@@ -84,16 +97,16 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private fun applyLang(code: String) =
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(code))
 
-    fun addGame(date: String, opp: String, sets: List<String>, notes: String) = viewModelScope.launch {
-        repo.addGame(date, opp, sets, notes); repo.clearDraft()
+    fun addGame(info: GameInfo, sets: List<String>) = viewModelScope.launch {
+        repo.addGame(info, sets); repo.clearDraft()
     }
-    fun updateGame(old: Game, date: String, opp: String, sets: List<String>, notes: String) =
-        viewModelScope.launch { repo.updateGame(old, date, opp, sets, notes) }
+    fun updateGame(old: Game, info: GameInfo, sets: List<String>) =
+        viewModelScope.launch { repo.updateGame(old, info, sets) }
     fun deleteGame(id: Long) = viewModelScope.launch { repo.deleteGame(id) }
     fun resetAll() = viewModelScope.launch { repo.resetAll() }
 
-    fun saveDraft(date: String, opp: String, sets: List<String>, notes: String) =
-        viewModelScope.launch { repo.saveDraft(date, opp, sets, notes) }
+    fun saveDraft(info: GameInfo, rawSets: List<String>) =
+        viewModelScope.launch { repo.saveDraft(info, rawSets) }
     suspend fun loadDraft() = repo.getDraft()
     fun clearDraft() = viewModelScope.launch { repo.clearDraft() }
 

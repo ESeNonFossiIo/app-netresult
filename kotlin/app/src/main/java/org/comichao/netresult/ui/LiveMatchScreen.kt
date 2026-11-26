@@ -51,21 +51,30 @@ fun LiveMatchScreen(vm: MainViewModel, onBack: () -> Unit) {
 private fun LiveSetup(vm: MainViewModel, onBack: () -> Unit) {
     val opponents by vm.opponents.collectAsState()
     val context = LocalContext.current
+    val partners by vm.partners.collectAsState()
     var opponent by remember { mutableStateOf("") }
+    var doubles by remember { mutableStateOf(false) }
+    var partner by remember { mutableStateOf("") }
+    var opponent2 by remember { mutableStateOf("") }
     var health by remember { mutableStateOf(false) }
 
     Scaffold(topBar = { BrandTopBar(stringResource(R.string.live_match), onBack) }) { pad ->
         Column(Modifier.padding(pad).padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-            SectionCard(stringResource(R.string.opponent)) {
-                OutlinedTextField(opponent, { opponent = it }, Modifier.fillMaxWidth(), singleLine = true,
-                    shape = MaterialTheme.shapes.small, placeholder = { Text(stringResource(R.string.enter_opponent)) })
-                val suggestions = opponents.filter { it != opponent }
-                if (suggestions.isNotEmpty()) LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    items(suggestions) { name -> SuggestionChip(onClick = { opponent = name }, label = { Text(name) }) }
+            SectionCard(stringResource(R.string.match_type)) {
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    FilterChip(!doubles, { doubles = false }, label = { Text(stringResource(R.string.singles)) })
+                    FilterChip(doubles, { doubles = true }, label = { Text(stringResource(R.string.doubles)) })
                 }
             }
+            SectionCard(stringResource(if (doubles) R.string.players else R.string.opponent)) {
+                val players = remember(opponents, partners) { allPlayers(opponents, partners) }
+                if (doubles) PickerField(partner, { partner = it }, stringResource(R.string.partner), stringResource(R.string.enter_partner), players, listOf(opponent, opponent2))
+                PickerField(opponent, { opponent = it }, stringResource(if (doubles) R.string.opponent_one else R.string.opponent), stringResource(R.string.enter_opponent),
+                    players, if (doubles) listOf(partner, opponent2) else emptyList())
+                if (doubles) PickerField(opponent2, { opponent2 = it }, stringResource(R.string.opponent_two), stringResource(R.string.enter_opponent), players, listOf(partner, opponent))
+            }
             if (Build.VERSION.SDK_INT >= 26 && HealthSync.available(context)) HealthToggle(health) { health = it }
-            Button({ vm.startLive(opponent, health) }, Modifier.fillMaxWidth().height(60.dp), enabled = opponent.isNotBlank(),
+            Button({ vm.startLive(opponent, health, doubles, partner, opponent2) }, Modifier.fillMaxWidth().height(60.dp), enabled = opponent.isNotBlank() && (!doubles || opponent2.isNotBlank()),
                 shape = MaterialTheme.shapes.medium,
                 colors = ButtonDefaults.buttonColors(containerColor = LocalPalette.current.accent, contentColor = LocalPalette.current.onAccent)) {
                 Text(stringResource(R.string.start_match), fontSize = 19.sp, fontWeight = FontWeight.ExtraBold)
@@ -100,7 +109,7 @@ private fun LivePlay(vm: MainViewModel, l: org.comichao.netresult.LiveState, onB
     var confirmFinish by remember { mutableStateOf(false) }
     BackHandler(m.started) { confirmExit = true }
 
-    Scaffold(topBar = { BrandTopBar(stringResource(R.string.live_vs, l.opponent)) { if (m.started) confirmExit = true else { vm.liveDiscard(); onBack() } } }) { pad ->
+    Scaffold(topBar = { BrandTopBar(stringResource(R.string.live_vs, l.label)) { if (m.started) confirmExit = true else { vm.liveDiscard(); onBack() } } }) { pad ->
         Column(Modifier.padding(pad).padding(16.dp).fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             SectionCard(null) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -110,7 +119,7 @@ private fun LivePlay(vm: MainViewModel, l: org.comichao.netresult.LiveState, onB
                 }
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceEvenly, modifier = Modifier.fillMaxWidth()) {
                     PointBox(stringResource(R.string.you), m.pointLabel(true))
-                    PointBox(l.opponent, m.pointLabel(false))
+                    PointBox(l.label, m.pointLabel(false))
                 }
                 if (m.inTiebreak) Text(stringResource(R.string.tiebreak), color = MaterialTheme.colorScheme.secondary, fontWeight = FontWeight.Bold)
             }
@@ -121,7 +130,7 @@ private fun LivePlay(vm: MainViewModel, l: org.comichao.netresult.LiveState, onB
                 }
                 Button({ vm.livePoint(false) }, Modifier.fillMaxWidth().weight(1f), shape = MaterialTheme.shapes.large,
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)) {
-                    Text(stringResource(R.string.point_opponent, l.opponent), fontSize = 28.sp, fontWeight = FontWeight.ExtraBold)
+                    Text(stringResource(R.string.point_opponent, l.label), fontSize = 28.sp, fontWeight = FontWeight.ExtraBold)
                 }
             } else {
                 Spacer(Modifier.weight(1f))

@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import org.comichao.netresult.R
 import org.comichao.netresult.data.Game
+import org.comichao.netresult.opponentLabel
 import org.comichao.netresult.scoreToSets
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,9 +67,12 @@ fun GameCard(g: Game, showOpponent: Boolean = true, onClick: (() -> Unit)? = nul
             Box(Modifier.width(6.dp).fillMaxHeight().background(fg))
             Row(Modifier.padding(14.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                    if (showOpponent) Text(g.opponent, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                    if (showOpponent) Text(g.opponentLabel, fontWeight = FontWeight.Bold, style = MaterialTheme.typography.titleMedium)
+                    partnerLine(g)?.let { Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant) }
                     Text(scoreToSets(g.score).joinToString("   ") { it.replace("*", " TB") },
                         style = MaterialTheme.typography.titleSmall, color = MaterialTheme.colorScheme.onSurface)
+                    detailsLine(g).takeIf { it.isNotEmpty() }?.let { Text(it, maxLines = 2, style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant) }
                     if (!g.notes.isNullOrBlank()) Text(g.notes, maxLines = 1, style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }

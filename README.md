@@ -60,6 +60,11 @@ the file. After installing the new version use **Settings > Import data > CSV**.
 
 - **Log a match in seconds.** Pick the date, type (or tap) your opponent, enter each set score
   and add a note if you like. Win, draw or loss is worked out for you.
+- **Singles or doubles.** Tap **Doubles** and enter your partner and the two opponents. A doubles match counts in your
+  numbers like any other; the history shows who you played with, and you can filter by singles or doubles.
+- **Add the details if you like.** An optional **Details** section holds the surface (hard, clay, grass, carpet),
+  indoor or outdoor, start time, duration, weather and temperature, and the venue. It is folded away so logging stays
+  quick, and the history can be narrowed to one surface. Live matches fill in the start time and duration for you.
 - **Tie-breaks.** Played a match tie-break instead of a third set (e.g. 10-8)? Tap **TB** on that
   set. It still counts as a set won or lost.
 - **Score a match live, on your phone or your watch.** Tap who won each point and the app keeps the tennis score

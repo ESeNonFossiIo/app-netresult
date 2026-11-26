@@ -38,7 +38,7 @@ class WatchViewModel(app: Application) : AndroidViewModel(app) {
     init {
         LiveBus.load(app)
         viewModelScope.launch { link.retryPending(); LiveLink.request(app) }   // is the phone already scoring?
-        viewModelScope.launch { live.collect { l -> if (l != null) lastOpponent = l.opponent } }
+        viewModelScope.launch { live.collect { l -> if (l != null) lastOpponent = l.label } }
         viewModelScope.launch { LiveBus.ended.collect { saved -> onEndedElsewhere(saved) } }
     }
 
@@ -85,7 +85,7 @@ class WatchViewModel(app: Application) : AndroidViewModel(app) {
     fun finishMatch() {
         val l = live.value ?: return
         if (!l.match.over && !finishing) { finishing = true; return }
-        end(WatchSession.MATCH, l.match.tokens(), l.opponent)
+        end(WatchSession.MATCH, l.match.tokens(), l.label)
     }
 
     fun endWarmup() = end(WatchSession.WARMUP, emptyList(), "")

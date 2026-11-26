@@ -59,3 +59,50 @@ fun computeStats(games: List<org.comichao.netresult.data.Game>): Stats {
     val draws = games.count { it.result == Result.Draw.name }
     return Stats(games.size, wins, draws, games.size - wins - draws, won, lost)
 }
+
+// ---- Doubles and match details ----------------------------------------------------------------
+
+val SURFACES = listOf("hard", "clay", "grass", "carpet", "other")
+val SETTINGS = listOf("outdoor", "indoor")
+val WEATHERS = listOf("sunny", "cloudy", "rain", "wind", "hot", "cold")
+
+/** Everything a match has besides its sets: who played, and where, when and in what weather. */
+data class GameInfo(
+    val date: String,
+    val opponent: String,
+    val notes: String = "",
+    val doubles: Boolean = false,
+    val partner: String = "",
+    val opponent2: String = "",
+    val surface: String? = null,
+    val setting: String? = null,
+    val startTime: String? = null,
+    val duration: Int? = null,
+    val weather: String? = null,
+    val temp: Int? = null,
+    val venue: String = "",
+)
+
+/** A doubles match (a null mode, from before doubles existed, is singles). */
+val org.comichao.netresult.data.Game.isDoubles get() = mode == "doubles"
+
+/** The other side as one line: "Anna" in singles, "Anna / Bob" in doubles. */
+val org.comichao.netresult.data.Game.opponentLabel get() =
+    if (isDoubles && !opponent2.isNullOrBlank()) "$opponent / $opponent2" else opponent
+
+/** The same pair of opponents however it is written ("Anna / Bob" is "Bob / Anna"), to group doubles matches by team. */
+val org.comichao.netresult.data.Game.teamKey get() =
+    if (isDoubles && !opponent2.isNullOrBlank()) listOf(opponent, opponent2).sortedBy { it.lowercase() }.joinToString(" / ") else opponent
+
+/** Whether [name] was one of the opponents. */
+fun org.comichao.netresult.data.Game.playedAgainst(name: String) = opponent == name || (isDoubles && opponent2 == name)
+
+fun GameInfo.toGame(sets: List<String>, id: Long = 0) = org.comichao.netresult.data.Game(
+    id = id, date = date, opponent = opponent, result = computeResult(sets).name, score = setsToScore(sets),
+    notes = notes.ifBlank { null },
+    mode = if (doubles) "doubles" else null,
+    partner = partner.takeIf { doubles && it.isNotBlank() }, opponent2 = opponent2.takeIf { doubles && it.isNotBlank() },
+    surface = surface?.takeIf { it in SURFACES }, setting = setting?.takeIf { it in SETTINGS },
+    startTime = startTime?.takeIf { it.isNotBlank() }, duration = duration?.takeIf { it > 0 },
+    weather = weather?.takeIf { it in WEATHERS }, temp = temp, venue = venue.trim().ifEmpty { null },
+)

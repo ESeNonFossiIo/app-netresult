@@ -19,18 +19,16 @@ import org.comichao.netresult.parseSet
 @Composable
 fun LogGameScreen(vm: MainViewModel, resume: Boolean, onBack: () -> Unit) {
     val opponents by vm.opponents.collectAsState()
+    val partners by vm.partners.collectAsState()
+    val venues by vm.venues.collectAsState()
     val state = remember { GameFormState() }
     var confirmDiscard by remember { mutableStateOf(false) }
     var draftSaved by remember { mutableStateOf(false) }
 
     LaunchedEffect(resume) {
-        if (resume) vm.loadDraft()?.let { d ->
-            val f = GameFormState.from(d.date.ifEmpty { state.date }, d.opponent, d.sets, d.notes)
-            state.date = f.date; state.opponent = f.opponent; state.notes = f.notes
-            state.sets.clear(); state.sets.addAll(f.sets)
-        }
+        if (resume) vm.loadDraft()?.let { d -> state.load(GameFormState.from(d, state.date)) }
     }
-    val dirty = state.opponent.isNotBlank() || state.notes.isNotBlank() || state.sets.any { it.player.isNotEmpty() || it.opp.isNotEmpty() }
+    val dirty = state.dirty
     BackHandler(dirty) { confirmDiscard = true }
 
     Scaffold(
@@ -38,13 +36,13 @@ fun LogGameScreen(vm: MainViewModel, resume: Boolean, onBack: () -> Unit) {
         bottomBar = {
             Surface(shadowElevation = 8.dp, color = MaterialTheme.colorScheme.surface) {
                 Column(Modifier.navigationBarsPadding().padding(horizontal = 16.dp, vertical = 10.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                    Button({ vm.addGame(state.date, state.opponent.trim(), state.validSets(), state.notes); onBack() },
+                    Button({ vm.addGame(state.info(), state.validSets()); onBack() },
                         Modifier.fillMaxWidth().height(54.dp), enabled = state.canSave, shape = MaterialTheme.shapes.medium,
                         colors = ButtonDefaults.buttonColors(containerColor = LocalPalette.current.accent, contentColor = LocalPalette.current.onAccent)) {
                         Text(stringResource(R.string.save_game), fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
                     }
                     Row {
-                        TextButton({ vm.saveDraft(state.date, state.opponent.trim(), state.rawSets, state.notes); draftSaved = true },
+                        TextButton({ vm.saveDraft(state.info(), state.rawSets); draftSaved = true },
                             Modifier.weight(1f), enabled = dirty) { Text(stringResource(R.string.save_draft)) }
                         TextButton({ if (dirty) confirmDiscard = true else onBack() }, Modifier.weight(1f)) { Text(stringResource(R.string.cancel)) }
                     }
@@ -55,7 +53,7 @@ fun LogGameScreen(vm: MainViewModel, resume: Boolean, onBack: () -> Unit) {
         Column(Modifier.padding(pad).verticalScroll(rememberScrollState()).padding(16.dp).imePadding(),
             verticalArrangement = Arrangement.spacedBy(14.dp)) {
             Text(stringResource(R.string.log_subtitle), color = MaterialTheme.colorScheme.onSurfaceVariant)
-            GameForm(state, opponents)
+            GameForm(state, opponents, partners, venues)
         }
     }
 
